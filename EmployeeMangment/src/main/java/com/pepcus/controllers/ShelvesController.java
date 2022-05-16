@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,9 +33,13 @@ public class ShelvesController {
 
     return new ResponseEntity<Shelves>(shelvesService.saveShelves(shelves), HttpStatus.CREATED);
   }
-  @PutMapping("/{bookid}")
-  public ResponseEntity<Shelves> addBook(@RequestBody List<Book> book, @PathVariable("bookid") Integer bookid) {
-    
-    return new  ResponseEntity(shelvesService.addBookInShelves(book, bookid),HttpStatus.ACCEPTED);
+
+  /*
+   * this handler for add book in shelf
+   */
+  @PatchMapping("/{shelvesId}")
+  public ResponseEntity<Shelves> addBook(@RequestBody List<Book> book, @PathVariable("shelvesId") Integer shelvesId) {
+
+    return new ResponseEntity(shelvesService.addBookInShelves(book, shelvesId), HttpStatus.ACCEPTED);
   }
 }

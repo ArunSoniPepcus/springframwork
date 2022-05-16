@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,22 +30,18 @@ public class UserController {
   private UserRepository userRepository;
   @Autowired
   private UserServices userServices;
-
+  
+/*
+ * add user in db
+ */
   @PostMapping
   public ResponseEntity<User> addUsers(@Valid @RequestBody User user) {
 
     return new ResponseEntity<User>(userServices.saveUser(user), HttpStatus.CREATED);
   }
-
-//   @PutMapping("/{userId}")
-//   public ResponseEntity<User> issueBook(@RequestBody List<Book>
-//   book,@RequestBody Integer userid) {
-//  
-//   return new ResponseEntity<User>(userServices.issueBook(book,userid),
-//   HttpStatus.ACCEPTED);
-//   }
+  
   @PutMapping
-  public ResponseEntity<User> issueBookByUser(@Valid @RequestBody List<Book> book,@RequestParam Integer userId) {
+  public ResponseEntity<User> issueBookByUser(@Valid @RequestBody List<Book> book, @RequestParam Integer userId) {
 
     return new ResponseEntity<User>(userServices.issueBook(userId, book), HttpStatus.CREATED);
   }
@@ -53,10 +50,19 @@ public class UserController {
   public ResponseEntity<User> deactivate(@Valid @RequestParam Integer userId) {
     return new ResponseEntity<User>(userServices.deactivateUser(userId), HttpStatus.OK);
   }
-  
+
   @PatchMapping("/activate")
   public ResponseEntity<User> activate(@Valid @RequestParam Integer userId) {
     return new ResponseEntity<User>(userServices.activateUser(userId), HttpStatus.OK);
+  }
+
+  /*
+   * this handler for return book from user
+   */
+  @DeleteMapping
+  public ResponseEntity<String> returnBookFromUser(@Valid @RequestBody List<Book> book, @RequestParam Integer userId) {
+    userServices.returnBooks(userId, book);
+    return new ResponseEntity<String>("Book return successfully!......", HttpStatus.OK);
   }
 
 }
